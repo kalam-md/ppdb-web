@@ -16,8 +16,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Update Profil</h5>
+                    <div class="card-body"> 
                         @if(session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}

@@ -48,7 +48,7 @@
         @endcan
         @can('isGuru')
         <li class="nav-item">
-          <a href="#" class="nav-link">
+          <a href="{{ route('guru.index') }}" class="nav-link {{ Request::is('guru*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-users"></i>
             <p>
               Daftar Guru

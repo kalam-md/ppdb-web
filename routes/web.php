@@ -4,17 +4,25 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GuruController;
 use App\Http\Controllers\PendaftaranSiswaController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\ProfilController;
+use App\Models\Blog;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
-    return view('welcome');
+    $blogs = Blog::paginate(3);
+    return view('welcome', [
+        'blogs' => $blogs
+    ]);
 });
 
 Route::get('/agenda', function () {
-    return view('agenda.agenda');
+    $blogs = Blog::all();
+    return view('agenda.agenda', [
+        'blogs' => $blogs
+    ]);
 });
 
 Route::get('/detail', function () {
@@ -42,3 +50,6 @@ Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index')-
 Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
 
 Route::resource('blog', BlogController::class)->middleware('auth');
+Route::get('/agenda/{slug}/detail', [BlogController::class, 'detail'])->name('agenda.detail');
+
+Route::get('/guru', [GuruController::class, 'index'])->name('guru.index')->middleware('auth');

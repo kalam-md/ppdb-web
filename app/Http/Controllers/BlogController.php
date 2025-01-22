@@ -130,4 +130,12 @@ class BlogController extends Controller
         alert()->success('Sukses', 'Blog berhasil dihapus!');
         return redirect()->route('blog.index');
     }
+
+    public function detail(string $slug)
+    {
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+        return view('agenda.detail', [
+            'blog' => $blog
+        ]);
+    }
 }
