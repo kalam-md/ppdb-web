@@ -106,7 +106,7 @@
 {{-- Video --}}
 
 {{-- Foto --}}
-<section id="foto" class="section-foto parallax" data-aos="zoom-in-up">
+<section id="ppdb" class="section-foto parallax" data-aos="zoom-in-up">
     <div class="container">
 
         <div class="d-flex justify-content-between align-items-center mb-5">
@@ -184,7 +184,7 @@
                 </div>
                 <h1 class="fw-bold mb-2">Gabung bersama kami, mewujudkan generasi berkualitas</h1>
                 <p class="mb-3">Masa depan cerah dimulai dari pendidikan yang baik. Gabung dengan kami dan jadilah siswa yang cerdas.</p>
-                <button class="btn btn-outline-danger">Daftar Disini</button>
+                <a href="/daftar" class="btn btn-outline-danger">Daftar Disini</a>
             </div>
             <div class="col-lg-6">
                 <img src="{{ asset('assets/images/daftar.png') }}" class="img-fluid" alt="">

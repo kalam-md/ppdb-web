@@ -11,22 +11,22 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="mb-2 navbar-nav me-auto mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Beranda</a>
+            <a class="nav-link active" aria-current="page" href="/">Beranda</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Profil</a>
+            <a class="nav-link active" href="/">Profil</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Agenda</a>
+            <a class="nav-link active" href="#agenda">Agenda</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">PPDB</a>
+            <a class="nav-link active" href="#ppdb">PPDB</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Fasilitas</a>
+            <a class="nav-link active" href="#fasilitas">Fasilitas</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Kontak</a>
+            <a class="nav-link active" href="#kontak">Kontak</a>
           </li>
         </ul>
         <div class="d-flex">
