@@ -17,47 +17,50 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Formulir Pendaftaran</h5>
+        @can('isOrangTua')
+          @if (!$hasPendaftaran)
+              <!-- Card Formulir Pendaftaran -->
+              <div class="col-4">
+                  <div class="card">
+                      <div class="card-body">
+                          <h5 class="card-title">Formulir Pendaftaran</h5>
+                          <p class="card-text">
+                              Silahkan isi formulir pendaftaran pada link di bawah ini untuk mengikuti PPDB di SDN Balekambang 1
+                          </p>
+                          <a href="{{ route('pendaftaran-siswa.create') }}" class="card-link">Formulir Pendaftaran</a>
+                      </div>
+                  </div>
+              </div>
+          @endif
 
-              <p class="card-text">
-                Silahkan isi formulir pendaftaran pada link di bawah ini untuk mengikuti PPDB di SDN Balekambang 1
-              </p>
-          
-              <a href="#" class="card-link">Formulir Pendaftaran</a>
-            </div>
-          </div>
-        </div>
+          @if ($hasPendaftaran)
+              <!-- Card Status Pendaftaran -->
+              <div class="col-4">
+                  <div class="card">
+                      <div class="card-body">
+                          <h5 class="card-title">Status Pendaftaran</h5>
+                          <p class="card-text">
+                              Silahkan kunjungi menu status pendaftaran agar dapat melihat status pendaftaran PPDB siswa pada link yang tersedia dibawah
+                          </p>
+                          <a href="{{ route('pendaftaran-siswa.show', $pendaftaran->slug) }}" class="card-link">Status Pendaftaran</a>
+                      </div>
+                  </div>
+              </div>
 
-        <div class="col-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Status Pendaftaran</h5>
-
-              <p class="card-text">
-                Silahkan kunjungi menu status pendaftaran agar dapat melihat status pendaftaran PPDB siswa pada link yang tersedia dibawah
-              </p>
-          
-              <a href="#" class="card-link">Status Pendaftaran</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Cetak Formulir Pendaftaran</h5>
-
-              <p class="card-text">
-                Silahkan klik tombol cetak status pendaftaran dibawah agar dapat mencetak formulir pendaftaran PPDB
-              </p>
-          
-              <a href="#" class="card-link">Cetak Status Pendaftaran</a>
-            </div>
-          </div>
-        </div>
+              <!-- Card Cetak Formulir Pendaftaran -->
+              <div class="col-4">
+                  <div class="card">
+                      <div class="card-body">
+                          <h5 class="card-title">Cetak Formulir Pendaftaran</h5>
+                          <p class="card-text">
+                              Silahkan klik tombol cetak status pendaftaran dibawah agar dapat mencetak formulir pendaftaran PPDB
+                          </p>
+                          <a href="{{ route('pendaftaran-siswa.cetak', $pendaftaran->slug) }}" class="card-link" target="_blank">Cetak Status Pendaftaran</a>
+                      </div>
+                  </div>
+              </div>
+          @endif
+        @endcan
         
         <div class="col-12">
           <div class="card">

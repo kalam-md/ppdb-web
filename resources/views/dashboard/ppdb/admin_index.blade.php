@@ -20,6 +20,16 @@
         <div class="col-12">
           <div class="card">
               <div class="card-body">
+                  <!-- Form Pencarian -->
+                  <form method="GET" action="{{ route('ppdb.index') }}" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan nama atau NIK..." value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Cari</button>
+                        </div>
+                    </div>
+                  </form>
+
                   <table class="table table-striped projects">
                     <thead>
                         <tr>
@@ -68,21 +78,26 @@
                               @endif
                           </td>
                           <td class="text-right project-actions">
-                              <a class="btn btn-primary btn-sm" href="#">
+                              <a class="btn btn-primary btn-sm" href="{{ route('pendaftaran-siswa.show', $ppdb->slug) }}">
                                   <i class="fas fa-folder">
                                   </i>
                                   Detail
                               </a>
-                              <a class="btn btn-info btn-sm" href="#">
-                                  <i class="fas fa-pencil-alt">
-                                  </i>
-                                  Verifikasi
-                              </a>
-                              <a class="btn btn-danger btn-sm" href="#">
-                                  <i class="fas fa-trash">
-                                  </i>
-                                  Tolak
-                              </a>
+                              @if ($ppdb->status === 'pending')
+                                  <a class="btn btn-info btn-sm btn-verifikasi" href="#" data-id="{{ $ppdb->id }}">
+                                      <i class="fas fa-pencil-alt"></i>
+                                      Verifikasi
+                                  </a>
+                                  <a class="btn btn-danger btn-sm btn-tolak" href="#" data-id="{{ $ppdb->id }}">
+                                      <i class="fas fa-trash"></i>
+                                      Tolak
+                                  </a>
+                              @endif    
+                              <a class="btn btn-success btn-sm" href="{{ route('pendaftaran-siswa.cetak', $ppdb->slug) }}">
+                                <i class="fas fa-download">
+                                </i>
+                                Cetak
+                              </a>                        
                           </td>
                         </tr>
                       @endforeach
@@ -96,4 +111,76 @@
     </div><!-- /.container-fluid -->
   </div>
 <!-- /.content -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Tangani tombol verifikasi
+  document.querySelectorAll('.btn-verifikasi').forEach(button => {
+      button.addEventListener('click', function () {
+          const id = this.dataset.id;
+          Swal.fire({
+              title: 'Apakah Anda yakin?',
+              text: "Status akan diubah menjadi diverifikasi.",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ya, ubah!'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  updateStatus(id, 'diverifikasi');
+              }
+          });
+      });
+  });
+
+  // Tangani tombol tolak
+  document.querySelectorAll('.btn-tolak').forEach(button => {
+      button.addEventListener('click', function () {
+          const id = this.dataset.id;
+          Swal.fire({
+              title: 'Apakah Anda yakin?',
+              text: "Status akan diubah menjadi ditolak.",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Ya, ubah!'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  updateStatus(id, 'ditolak');
+              }
+          });
+      });
+  });
+
+  // Fungsi untuk mengupdate status
+  function updateStatus(id, status) {
+      fetch(`/pendaftaran-siswa/${id}/status`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({ status: status })
+      })
+      .then(response => response.json())
+      .then(data => {
+          Swal.fire(
+              'Berhasil!',
+              data.message,
+              'success'
+          ).then(() => {
+              location.reload();
+          });
+      })
+      .catch(error => {
+          Swal.fire(
+              'Error!',
+              'Terjadi kesalahan, silakan coba lagi.',
+              'error'
+          );
+      });
+  }
+</script>
 @endsection

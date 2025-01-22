@@ -21,14 +21,14 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="{{ route('profil.index') }}" class="nav-link {{ Request::is('profil*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Profil</p>
               </a>
             </li>
             @can('isGuru')
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="{{ route('blog.index') }}" class="nav-link {{ Request::is('blog*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Agenda Sekolah</p>
               </a>
@@ -56,7 +56,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ route('ppdb.index') }}" class="nav-link {{ Request::is('ppdb*') ? 'active' : '' }}">
+          <a href="{{ route('ppdb.index') }}" class="nav-link {{ Request::is('ppdb*') || Request::is('pendaftaran-siswa*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-clipboard-list"></i>
             <p>
               PPDB

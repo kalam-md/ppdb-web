@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>PPDB SDN Balekambang 1</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -11,6 +12,9 @@
   <link rel="stylesheet" href="{{ asset('template-dashboard/plugins/fontawesome-free/css/all.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('template-dashboard/dist/css/adminlte.min.css') }}">
+  <!-- Trix Editor -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 @include('sweetalert::alert')
@@ -47,10 +51,6 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-      Anything you want
-    </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; 2025 <a href="#">Rafi Ramadhan</a>.</strong> All rights reserved.
   </footer>

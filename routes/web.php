@@ -6,6 +6,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PendaftaranSiswaController;
 use App\Http\Controllers\PpdbController;
+use App\Http\Controllers\ProfilController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -33,11 +34,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::resource('pendaftaran-siswa', PendaftaranSiswaController::class)->middleware('auth');
+Route::post('/pendaftaran-siswa/{id}/status', [PendaftaranSiswaController::class, 'updateStatus'])->name('pendaftaran-siswa.update-status');
+Route::get('/pendaftaran-siswa/{slug}/cetak', [PendaftaranSiswaController::class, 'cetak'])->name('pendaftaran-siswa.cetak');
 Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb.index')->middleware('auth');
 
-Route::get('/blog', [BlogController::class, 'index'])->name('blog')->middleware('auth');
-Route::get('/blog/create', [BlogController::class, 'create'])->name('blog.create')->middleware('auth');
-Route::post('/blog/store', [BlogController::class, 'store'])->name('blog.store')->middleware('auth');
-Route::get('/blog/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit')->middleware('auth');
-Route::post('/blog/update/{id}', [BlogController::class, 'update'])->name('blog.update')->middleware('auth');
-Route::post('/blog/destroy/{id}', [BlogController::class, 'destroy'])->name('blog.destroy')->middleware('auth');
+Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index')->middleware('auth');
+Route::post('/profil/update', [ProfilController::class, 'update'])->name('profil.update');
+
+Route::resource('blog', BlogController::class)->middleware('auth');

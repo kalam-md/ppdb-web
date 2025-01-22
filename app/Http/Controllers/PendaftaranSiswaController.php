@@ -7,6 +7,7 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PendaftaranSiswaController extends Controller
 {
@@ -109,5 +110,23 @@ class PendaftaranSiswaController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $status = $request->status;
+
+        $ppdb = PendaftaranSiswa::findOrFail($id);
+        $ppdb->status = $status;
+        $ppdb->save();
+
+        return response()->json(['message' => 'Status berhasil diubah menjadi ' . $status]);
+    }
+
+    public function cetak(string $slug)
+    {
+        $pendaftaran = PendaftaranSiswa::where('slug', $slug)->firstOrFail();
+        $pdf = PDF::loadView('dashboard.ppdb.cetak', compact('pendaftaran'));
+        return $pdf->stream('pendaftaran-siswa.pdf');
     }
 }

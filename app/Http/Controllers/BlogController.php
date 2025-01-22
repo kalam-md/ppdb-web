@@ -3,104 +3,131 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-
-
-
 
 class BlogController extends Controller
 {
-    # fungsi index
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return view('admin.blog.index', [
-            'artikels' => Blog::orderBy('id', 'desc')->get()
+        $blogs = Blog::all();
+        return view('dashboard.blog.index', [
+            'blogs' => $blogs
         ]);
     }
 
-    # halaman create
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('admin.blog.create');
+        return view('dashboard.blog.create');
     }
 
-    # fungsi store
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $rules = [
-            'judul' => 'required',
-            'image' => 'required|max:1000|mimes:jpg,jpeg,png,webp',
-            'desc' => 'required|min:20',
-        ];
-
-        $messages = [
-            'judul.required' => 'Judul Wajib di isi!',
-            'image.required' => 'Gambar wajib di tambahkan!',
-            'desc.required' => 'Deskripsi wajib di isi!',
-        ];
-
-        $this->validate($request, $rules, $messages);
-
-        // Image
-        $fileName = time() .'.'. $request->image->extension();
-        $request->file('image')->storeAs('public/artikel', $fileName);
-
-        // artikel
-        $storage = "storage/content-artikel";
-        $dom = new \DOMDocument();
-
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($request->desc, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NOIMPLIED);
-
-        libxml_clear_errors();
-
-        $images = $dom->getElementsByTagName('img');
-
-        foreach ($images as $img) {
-            $src = $img->getAttribute('src');
-            if (preg_match('/data:image/', $src)) {
-                preg_match('/data:image\/(?<mime>.*?)\;/', $src, $groups);
-                $mimetype = $groups['mime'];
-                $fileNameContent = uniqid();
-                $fileNameContentRand = substr(md5($fileNameContent), 6, 6) . '_' . time();
-                $filePath = ("$storage/$fileNameContentRand.$mimetype");
-                $image = Image::make($src)->resize(1440, 720)->encode($mimetype, 100)->save(public_path($filePath));
-                $new_src = asset($filePath);
-                $img->removeAttribute('src');
-                $img->setAttribute('src', $new_src);
-                $img->setAttribute('class', 'img-responsive');
-            }
-        }
-
-        Blog::create([
-            'judul' => $request->judul,
-            'slug' => Str::slug($request->judul, '-'),
-            'image' => $fileName,
-            'desc'=> $dom->saveHTML(),
+        $validatedData = $request->validate([
+            'judul' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'desc' => 'required|string',
         ]);
 
-        return redirect(route('blog'))->with('success', 'data berhasil di simpan!');
+        $validatedData['slug'] = SlugService::createSlug(Blog::class, 'slug', $validatedData['judul']);
+    
+        // Menyimpan gambar jika ada
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('img-blogs', 'public');
+        }
+    
+        $validatedData['image'] = $imagePath;
+
+        Blog::create($validatedData);
+    
+        alert()->success('Sukses', 'Blog berhasil dibuat!');
+        return redirect()->route('blog.index');
     }
 
-    # halaman edit
-    public function edit($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $slug)
     {
-        return view('admin.blog.edit');
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+        return view('dashboard.blog.show', [
+            'blog' => $blog
+        ]);
     }
 
-    # fungsi update
-    public function update(Request $request, $id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $slug)
     {
-
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+        return view('dashboard.blog.edit', [
+            'blog' => $blog
+        ]);
     }
 
-    # fungsi delete
-    public function destroy($id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $slug)
     {
+        $blog = Blog::where('slug', $slug)->firstOrFail();
 
+        // Validasi input
+        $validatedData = $request->validate([
+            'judul' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'desc' => 'required|string',
+        ]);
+
+        // Jika judul diubah, buat slug baru
+        if ($blog->judul !== $validatedData['judul']) {
+            $validatedData['slug'] = SlugService::createSlug(Blog::class, 'slug', $validatedData['judul']);
+        }
+
+        // Menyimpan gambar baru jika ada
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($blog->image && Storage::exists('public/' . $blog->image)) {
+                Storage::delete('public/' . $blog->image);
+            }
+            // Simpan gambar baru
+            $validatedData['image'] = $request->file('image')->store('img-blogs', 'public');
+        }
+
+        // Update data blogs
+        $blog->update($validatedData);
+
+        alert()->success('Sukses', 'Blog berhasil diperbarui!');
+        return redirect()->route('blog.index');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $slug)
+    {
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+
+        if ($blog->image && Storage::exists('public/' . $blog->image)) {
+            Storage::delete('public/' . $blog->image);
+        }
+    
+        // Hapus blog
+        $blog->delete();
+    
+        alert()->success('Sukses', 'Blog berhasil dihapus!');
+        return redirect()->route('blog.index');
+    }
 }

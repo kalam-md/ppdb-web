@@ -26,23 +26,24 @@
                       <p class="mb-3 font-weight-bold">Detail Pendaftaran Calon Peserta Didik</p>
 
                       <!-- Status -->
-                      @if ($pendaftaran->status == 'pending')
-                      <div class="mt-3 alert alert-warning">
-                        <i class="mr-2 fas fa-info-circle"></i>
-                        Status: Pendaftaran Anda telah menunggu verifikasi pihak sekolah. Silakan menunggu informasi lebih lanjut dari panitia PPDB.
-                      </div>  
-                      @elseif($pendaftaran->status == 'ditolak')
-                      <div class="mt-3 alert alert-danger">
-                        <i class="mr-2 fas fa-info-circle"></i>
-                        Status: Pendaftaran Anda telah ditolak. Silakan menunggu informasi lebih lanjut dari panitia PPDB.
-                      </div>  
-                      @else
-                      <div class="mt-3 alert alert-success">
-                        <i class="mr-2 fas fa-check-circle"></i>
-                        Status: Pendaftaran Anda telah diterima. Silakan menunggu informasi lebih lanjut dari panitia PPDB.
-                      </div>  
-                      @endif
-      
+                      @can('isOrangTua')
+                        @if ($pendaftaran->status == 'pending')
+                        <div class="mt-3 alert alert-warning">
+                          <i class="mr-2 fas fa-info-circle"></i>
+                          Status: Pendaftaran Anda telah menunggu verifikasi pihak sekolah. Silakan menunggu informasi lebih lanjut dari panitia PPDB.
+                        </div>  
+                        @elseif($pendaftaran->status == 'ditolak')
+                        <div class="mt-3 alert alert-danger">
+                          <i class="mr-2 fas fa-info-circle"></i>
+                          Status: Pendaftaran Anda telah ditolak. Silakan menunggu informasi lebih lanjut dari panitia PPDB.
+                        </div>  
+                        @else
+                        <div class="mt-3 alert alert-success">
+                          <i class="mr-2 fas fa-check-circle"></i>
+                          Status: Pendaftaran Anda telah diterima. Silakan menunggu informasi lebih lanjut dari panitia PPDB.
+                        </div>  
+                        @endif
+                      @endcan
                       <!-- Detail Data Pribadi -->
                       <p class="font-weight-bold">A. DATA PRIBADI SISWA</p>
                       <ul>
@@ -74,12 +75,14 @@
                           <li><strong>Pekerjaan Ibu:</strong> {{ $pendaftaran->pekerjaan_ibu ?? '-' }}</li>
                       </ul>
       
-                      <div class="mt-3 alert alert-info">
+                      @can('isOrangTua')
+                        <div class="mt-3 alert alert-info">
                           <i class="mr-2 fas fa-info-circle"></i>
                           Untuk informasi lebih lanjut bisa menghubungi panitia PPDB:
                           <br>
                           Telp/WA: (021) 8989XXXX
-                      </div>
+                        </div>
+                      @endcan
                   </div>
               </div>
           </div>
