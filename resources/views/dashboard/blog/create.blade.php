@@ -27,6 +27,9 @@
                             <div class="form-group">
                                 <label for="image">Gambar</label>
                                 <input type="file" name="image" id="image" class="form-control" accept="image/*">
+                                <div class="mt-3">
+                                    <img id="preview" src="#" alt="Pratinjau Gambar" style="max-width: 100%; max-height: 300px; display: none;">
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -43,4 +46,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('image').addEventListener('change', function (event) {
+        const preview = document.getElementById('preview');
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    });
+</script>
 @endsection

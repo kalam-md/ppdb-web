@@ -65,18 +65,21 @@
                   </div>
   
                   <div class="form-group">
-                      <label>Upload Kartu Keluarga</label>
-                      <div class="input-group">
-                          <div class="custom-file">
-                              <input type="file" class="custom-file-input @error('foto_kartu_keluarga') is-invalid @enderror" 
-                                     name="foto_kartu_keluarga" id="foto_kartu_keluarga">
-                              <label class="custom-file-label" for="foto_kartu_keluarga">Pilih file</label>
-                          </div>
-                      </div>
-                      @error('foto_kartu_keluarga')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                      @enderror
-                  </div>
+                    <label>Upload Kartu Keluarga</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input @error('foto_kartu_keluarga') is-invalid @enderror" 
+                                   name="foto_kartu_keluarga" id="foto_kartu_keluarga" accept="image/*">
+                            <label class="custom-file-label" for="foto_kartu_keluarga">Pilih file</label>
+                        </div>
+                    </div>
+                    @error('foto_kartu_keluarga')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    <div class="mt-3">
+                        <img id="preview_kartu_keluarga" src="#" alt="Preview Gambar" style="display: none; max-width: 500px; height: auto; object-fit:cover">
+                    </div>
+                </div>
   
                   <div class="text-right">
                       <button type="button" class="btn btn-primary" onclick="nextStep(1)">Lanjut</button>
@@ -296,6 +299,27 @@
     </div><!-- /.container-fluid -->
   </div>
 <!-- /.content -->
+
+<script>
+    document.getElementById('foto_kartu_keluarga').addEventListener('change', function(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview_kartu_keluarga');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    });
+</script>
 
 <script>
 function nextStep(currentStep) {
