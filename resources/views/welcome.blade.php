@@ -65,7 +65,7 @@
                             <p class="mb-3 text-secondary">{{ $blog->created_at }}</p>
                             <h4 class="fw-bold mb-3">{{ $blog->judul }}</h4>
                             <p class="text-secondary">#{{ $blog->slug }}</p>
-                            <a href="{ route('agenda.detail', $blog->slug) }}" class="text-decoration-none text-info">Selengkapnya</a>
+                            <a href="{{ route('agenda.detail', $blog->slug) }}" class="text-decoration-none text-info">Selengkapnya</a>
                         </div>
                     </div>
                 </div>
