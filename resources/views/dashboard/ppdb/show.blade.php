@@ -82,6 +82,8 @@
                           <br>
                           Telp/WA: (021) 8989XXXX
                         </div>
+
+                        <a href="{{ route('pendaftaran-siswa.edit', $pendaftaran->slug) }}" class="btn btn-info btn-block">Edit Pendaftaran</a>
                       @endcan
                   </div>
               </div>
